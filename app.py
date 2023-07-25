@@ -17,8 +17,6 @@ def calculate_checksum(data):
         checksum ^= byte
     return checksum
 
-
-#updated code
 # Convert text to hexadecimal representation with data modifiers
 def text_to_hex_with_modifiers(text, color="default", flashing=False):
     color_modifiers = {
@@ -49,14 +47,14 @@ def send_data(hex_data, address=1):
     # Convert address to byte
     address_byte = bytes([address])
 
-    # Prepare the data without EOT for checksum calculation
-    data_without_eot = bytes.fromhex(f"00 53 {address:02X} 03 {hex_data}")
+    # Prepare the data with EOT for checksum calculation
+    data_with_eot = bytes.fromhex(f"00 53 {address:02X} 03 {hex_data} 04")
 
     # Calculate the checksum
-    checksum = calculate_checksum(data_without_eot)
+    checksum = calculate_checksum(data_with_eot)
 
     # Prepare the full data to send (including headers and checksum)
-    full_data = data_without_eot + bytes([checksum]) + b'\x04'
+    full_data = data_with_eot + bytes([checksum])
 
     # Send the data over RS232
     ser.write(full_data)
