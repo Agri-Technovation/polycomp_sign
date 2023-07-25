@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Polycomp Signage Control</title>
+</head>
+
+<body>
+    <h1>Polycomp Signage Control</h1>
+    <img src="{{ url_for('static', filename='pick.png') }}" alt="Picklogger">
+    <form id="control-form" method="POST">
+        <label for="text">Enter text:</label>
+        <input type="text" id="text" name="text" placeholder="Enter text here">
+        <br>
+        <label for="color">Select color:</label>
+        <select id="color" name="color">
+            <option value="default">Default</option>
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="yellow">Yellow</option>
+            <option value="blue">Blue</option>
+            <option value="pink">Pink</option>
+            <option value="cyan">Cyan</option>
+            <option value="white">White</option>
+            <option value="multi-color">Multi-Color</option>
+        </select>
+        <br>
+        <input type="checkbox" id="flashing" name="flashing">
+        <label for="flashing">Flashing</label>
+        <br>
+        <input type="submit" value="Send">
+    </form>
+
+    <!-- Display the sent data here -->
+    <div id="sent-data">
+        Sent Data: Loading...
+    </div>
+
+    <div>
+        <a>met dank aan die picklogger inventor: Albert Bijker</a>
+    </div>
+
+    <script>
+        document.getElementById("control-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const text = formData.get("text");
+            const color = formData.get("color");
+            const flashing = formData.get("flashing") === "on";
+            sendDataToServer(text, color, flashing);
+        });
+
+        function updateData() {
+            fetch('/get_sent_data')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('sent-data').textContent = "Sent Data: " + data;
+                });
+        }
+
+        // Fetch the sent data when the page loads and refresh every 5 seconds
+        updateData();
+        setInterval(updateData, 5000); // 5000 milliseconds = 5 seconds
+
+        function sendDataToServer(text, color, flashing) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        alert("Data sent successfully!");
+                    } else {
+                        alert("Error sending data. Please try again.");
+                    }
+                }
+            };
+            xhr.send("text=" + encodeURIComponent(text) + "&color=" + encodeURIComponent(color) + "&flashing=" + flashing);
+        }
+    </script>
+</body>
+</html>
