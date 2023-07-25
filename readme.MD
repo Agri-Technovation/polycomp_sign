@@ -71,9 +71,10 @@ Start the Flask web server by running the following command inside the web_app d
 python3 app.py
 ```
 
-# 10. 10. Access the web server:
+# 10. Access the web server:
 
-With the web server running, you can access it from any device on the same network by entering the Raspberry Pi's IP address in a web browser. For example, if your Raspberry Pi's IP address is 192.168.1.100, enter http://192.168.1.100 in the browser's address bar.
+With the web server running, you can access it from any device on the same network by entering the Raspberry Pi's IP address in a web browser. For example, if your Raspberry Pi's IP address is 192.168.1.100, enter http://192.168.1.100:8080 in the browser's address bar.
+
 
 # Important Notes:
 
