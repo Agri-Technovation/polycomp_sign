@@ -32,15 +32,19 @@ def text_to_hex_with_modifiers(text, color="default", flashing=False):
     }
     color_modifier = color_modifiers[color.lower()] if color.lower() in color_modifiers else color_modifiers["default"]
 
-    hex_data = f"{color_modifier:02X}"  # Add the color modifier once at the beginning
+    hex_data = ""
+
+    if color != "default":
+        hex_data += f"{0x1C:02X}{color_modifier:02X}"  # Add the color modifier if color is selected
 
     if flashing:
-        hex_data += "1C"  # Add the flashing modifier after the color modifier
+        hex_data += f"{0x1C:02X}46"  # Add the flashing modifier if selected
 
     for char in text:
         hex_data += f"{ord(char):02X}"
 
     return hex_data
+
 
 # Send data over RS232 using the provided protocol
 def send_data(hex_data, address=1):
